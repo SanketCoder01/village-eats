@@ -1,6 +1,6 @@
 {
   "appId": "com.sanketcoder01.villageeats",
   "appName": "VillageEats",
-  "webDir": "public",
+  "webDir": "out",
   "bundledWebRuntime": false
 }
