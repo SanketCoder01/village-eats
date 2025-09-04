@@ -1,0 +1,6 @@
+{
+  "appId": "com.sanketcoder01.villageeats",
+  "appName": "VillageEats",
+  "webDir": "village-eats/village-eats/out",
+  "bundledWebRuntime": false
+}

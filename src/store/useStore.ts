@@ -32,6 +32,16 @@ interface Address {
   isDefault: boolean
 }
 
+interface Order {
+  id: string
+  restaurant: string
+  items: string[]
+  status: 'preparing' | 'on_way' | 'delivered' | 'rejected'
+  total: number
+  estimatedTime: string
+  orderTime: string
+}
+
 interface Store {
   // User State
   user: User | null
@@ -57,6 +67,11 @@ interface Store {
   clearCart: () => void
   getCartTotal: () => number
   getCartItemCount: () => number
+  
+  // Orders
+  orders: Order[]
+  addOrder: (order: Omit<Order, 'id'>) => void
+  updateOrderStatus: (id: string, status: Order['status']) => void
   
   // Search
   searchQuery: string
@@ -97,13 +112,8 @@ export const useStore = create<Store>((set, get) => ({
   setShowLocationPicker: (show) => set({ showLocationPicker: show }),
   
   // User
-  user: {
-    id: '1',
-    name: 'Sanket Patil',
-    email: 'sanket@example.com',
-    phone: '+91 9876543210'
-  },
-  isAuthenticated: true,
+  user: null,
+  isAuthenticated: false,
   setUser: (user) => set({ user, isAuthenticated: !!user }),
   logout: () => set({ user: null, isAuthenticated: false, cart: [] }),
   
@@ -180,6 +190,20 @@ export const useStore = create<Store>((set, get) => ({
   // Navigation
   activeTab: 'home',
   setActiveTab: (tab) => set({ activeTab: tab }),
+  
+  // Orders
+  orders: [],
+  addOrder: (order) => {
+    const newOrder = { ...order, id: Date.now().toString() }
+    set({ orders: [...get().orders, newOrder] })
+  },
+  updateOrderStatus: (id, status) => {
+    set({
+      orders: get().orders.map(order =>
+        order.id === id ? { ...order, status } : order
+      )
+    })
+  },
   
   // UI
   isLoading: false,

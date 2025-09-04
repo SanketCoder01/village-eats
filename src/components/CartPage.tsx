@@ -2,12 +2,8 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useStore } from '@/store/useStore'
-import { translations } from '@/lib/translations'
+import { useStore } from '../store/useStore'
 import { ArrowLeft, Plus, Minus, Trash2, MapPin, Clock } from 'lucide-react'
-import BottomNavigation from './BottomNavigation'
-import OrderSuccess from './OrderSuccess'
-import CheckoutFlow from './CheckoutFlow'
 
 interface CartPageProps {
   onBack: () => void
@@ -15,7 +11,6 @@ interface CartPageProps {
 
 export default function CartPage({ onBack }: CartPageProps) {
   const { language, cart, updateQuantity, removeFromCart, getCartTotal, getCartItemCount, selectedLocation, clearCart } = useStore()
-  const t = translations[language]
   const [showCheckout, setShowCheckout] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'online'>('cod')
@@ -44,7 +39,7 @@ export default function CartPage({ onBack }: CartPageProps) {
             >
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </button>
-            <h1 className="text-xl font-bold text-gray-900">{t.cart}</h1>
+            <h1 className="text-xl font-bold text-gray-900">{language === 'mr' ? 'कार्ट' : 'Cart'}</h1>
           </div>
         </div>
 
@@ -60,17 +55,6 @@ export default function CartPage({ onBack }: CartPageProps) {
           </button>
         </div>
 
-        <BottomNavigation activeTab="cart" onTabChange={(tab) => {
-          if (tab === 'home') onBack()
-          else if (tab === 'search') {
-            onBack()
-            setTimeout(() => useStore.getState().setActiveTab?.('search'), 100)
-          }
-          else if (tab === 'settings') {
-            onBack()
-            setTimeout(() => useStore.getState().setActiveTab?.('settings'), 100)
-          }
-        }} />
       </div>
     )
   }
@@ -86,7 +70,7 @@ export default function CartPage({ onBack }: CartPageProps) {
           >
             <ArrowLeft className="w-5 h-5 text-gray-600" />
           </button>
-          <h1 className="text-xl font-bold text-gray-900">{t.cart} ({getCartItemCount()})</h1>
+          <h1 className="text-xl font-bold text-gray-900">{language === 'mr' ? 'कार्ट' : 'Cart'} ({getCartItemCount()})</h1>
         </div>
       </div>
 
@@ -94,7 +78,7 @@ export default function CartPage({ onBack }: CartPageProps) {
       <div className="bg-white mx-4 mt-4 p-4 rounded-xl shadow-sm">
         <div className="flex items-center space-x-3 mb-2">
           <MapPin className="w-5 h-5 text-orange-500" />
-          <span className="font-medium text-gray-900">{t.deliveryTo}</span>
+          <span className="font-medium text-gray-900">{language === 'mr' ? 'डिलिव्हरी' : 'Delivery to'}</span>
         </div>
         <p className="text-gray-700 ml-8">{selectedLocation}</p>
         <div className="flex items-center space-x-3 mt-2 ml-8">
@@ -207,40 +191,34 @@ export default function CartPage({ onBack }: CartPageProps) {
         </button>
       </div>
 
-      {/* Checkout Flow */}
-      <AnimatePresence>
-        {showCheckout && (
-          <CheckoutFlow
-            onBack={() => setShowCheckout(false)}
-            onSuccess={handleOrderSuccess}
-            totalAmount={totalAmount}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Order Success Modal */}
-      {showSuccess && orderDetails && (
-        <OrderSuccess
-          orderDetails={orderDetails}
-          onGoHome={() => {
-            setShowSuccess(false)
-            clearCart()
-            onBack()
-          }}
-        />
+      {/* Simplified checkout for now */}
+      {showCheckout && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 m-4 max-w-sm w-full">
+            <h3 className="text-lg font-bold mb-4">Checkout</h3>
+            <p className="text-gray-600 mb-4">Total: ₹{totalAmount}</p>
+            <div className="flex space-x-3">
+              <button
+                onClick={() => setShowCheckout(false)}
+                className="flex-1 bg-gray-200 text-gray-800 py-2 rounded-lg"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setShowCheckout(false)
+                  clearCart()
+                  onBack()
+                }}
+                className="flex-1 bg-orange-500 text-white py-2 rounded-lg"
+              >
+                Place Order
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
-      <BottomNavigation activeTab="cart" onTabChange={(tab) => {
-        if (tab === 'home') onBack()
-        else if (tab === 'search') {
-          onBack()
-          setTimeout(() => useStore.getState().setActiveTab?.('search'), 100)
-        }
-        else if (tab === 'settings') {
-          onBack()
-          setTimeout(() => useStore.getState().setActiveTab?.('settings'), 100)
-        }
-      }} />
     </div>
   )
 }

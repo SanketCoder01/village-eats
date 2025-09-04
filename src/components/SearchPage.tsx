@@ -2,10 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { useStore } from '@/store/useStore'
-import { translations } from '@/lib/translations'
+import { useStore } from '../store/useStore'
 import { Search, ArrowLeft, Filter } from 'lucide-react'
-import BottomNavigation from './BottomNavigation'
 
 const searchResults = [
   'Pizza',
@@ -30,7 +28,6 @@ interface SearchPageProps {
 
 export default function SearchPage({ onBack }: SearchPageProps) {
   const { language, searchQuery, setSearchQuery } = useStore()
-  const t = translations[language]
   const [localQuery, setLocalQuery] = useState(searchQuery)
   const [filteredResults, setFilteredResults] = useState<string[]>([])
   const [searchHistory, setSearchHistory] = useState<string[]>(['Pizza', 'Biryani', 'Chinese'])
@@ -66,7 +63,7 @@ export default function SearchPage({ onBack }: SearchPageProps) {
             >
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </button>
-            <h1 className="text-xl font-bold text-gray-900">{t.search}</h1>
+            <h1 className="text-xl font-bold text-gray-900">{language === 'mr' ? 'शोध' : 'Search'}</h1>
           </div>
 
           <div className="relative mb-4">
@@ -84,10 +81,10 @@ export default function SearchPage({ onBack }: SearchPageProps) {
           <div className="flex space-x-3">
             <button className="px-3 py-2 bg-gray-100 rounded-full flex items-center space-x-1">
               <Filter className="w-4 h-4" />
-              <span className="text-sm">{t.filters}</span>
+              <span className="text-sm">{language === 'mr' ? 'फिल्टर' : 'Filters'}</span>
             </button>
             <button className="px-3 py-2 bg-gray-100 rounded-full">
-              <span className="text-sm">{t.pureVeg}</span>
+              <span className="text-sm">{language === 'mr' ? 'शुद्ध शाकाहारी' : 'Pure Veg'}</span>
             </button>
           </div>
         </div>
@@ -118,8 +115,8 @@ export default function SearchPage({ onBack }: SearchPageProps) {
           ) : (
             <div className="text-center py-12">
               <div className="text-6xl mb-4">🔍</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{t.noResultsFound}</h3>
-              <p className="text-gray-600">{t.trySearchingElse}</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">{language === 'mr' ? 'कोणतेही परिणाम सापडले नाहीत' : 'No results found'}</h3>
+              <p className="text-gray-600">{language === 'mr' ? 'दुसरे काहीतरी शोधून पहा' : 'Try searching for something else'}</p>
             </div>
           )
         ) : (
@@ -172,7 +169,6 @@ export default function SearchPage({ onBack }: SearchPageProps) {
         )}
       </div>
 
-      <BottomNavigation activeTab="search" onTabChange={() => {}} />
     </div>
   )
 }

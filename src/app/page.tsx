@@ -6,7 +6,7 @@ import { useStore } from '@/store/useStore'
 import LoadingScreen from '@/components/LoadingScreen'
 import NewLandingPage from '@/components/NewLandingPage'
 import OTPVerification from '@/components/OTPVerification'
-import NewDashboard from '@/components/NewDashboard'
+import Dashboard from '@/components/Dashboard'
 
 export default function Home() {
   const { isAuthenticated } = useStore()
@@ -47,7 +47,7 @@ export default function Home() {
       )}
 
       {currentStep === 'dashboard' && (
-        <NewDashboard />
+        <Dashboard />
       )}
     </AnimatePresence>
   )
